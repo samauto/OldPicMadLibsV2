@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+    <entity name="AdjectivePhoto" representedClassName=".AdjectivePhoto" syncable="YES">
+        <attribute name="adjectiveName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="adjectivePath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="adjective" inverseEntity="MadLib" syncable="YES"/>
+    </entity>
+    <entity name="AdverbPhoto" representedClassName=".AdverbPhoto" syncable="YES">
+        <attribute name="adverbName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="adverbPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="adverb" inverseEntity="MadLib" syncable="YES"/>
+    </entity>
+    <entity name="MadLib" syncable="YES">
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="adjective" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdjectivePhoto" inverseName="madlib" inverseEntity="AdjectivePhoto" syncable="YES"/>
+        <relationship name="adverb" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdverbPhoto" inverseName="madlib" inverseEntity="AdverbPhoto" syncable="YES"/>
+        <relationship name="noun" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NounPhoto" inverseName="madlib" inverseEntity="NounPhoto" syncable="YES"/>
+        <relationship name="verb" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VerbPhoto" inverseName="madlib" inverseEntity="VerbPhoto" syncable="YES"/>
+    </entity>
+    <entity name="NounPhoto" representedClassName=".NounPhoto" syncable="YES">
+        <attribute name="nounName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nounPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="noun" inverseEntity="MadLib" syncable="YES"/>
+    </entity>
+    <entity name="VerbPhoto" representedClassName=".VerbPhoto" syncable="YES">
+        <attribute name="verbName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="verbPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="verb" inverseEntity="MadLib" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="NounPhoto" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="MadLib" positionX="-54" positionY="18" width="128" height="120"/>
+        <element name="AdjectivePhoto" positionX="-36" positionY="18" width="128" height="90"/>
+        <element name="AdverbPhoto" positionX="-18" positionY="27" width="128" height="90"/>
+        <element name="VerbPhoto" positionX="0" positionY="45" width="128" height="90"/>
+    </elements>
 </model>
