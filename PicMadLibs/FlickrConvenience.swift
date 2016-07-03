@@ -15,28 +15,31 @@ import Foundation
 
 extension FlickrAPI {
     
+    //USER ENTERS NOUN = Text Parameter
+    //
     
     // MARK: GET Convenience Methods
     
     // Get Flickr Photos
-    func getPhotos(pin: Pin, completionHandlerForPhotos: (success: Bool, result: AnyObject!,errorString: String?) -> Void) {
+    func getPhotos(word: String, completionHandlerForPhotos: (success: Bool, result: AnyObject!,errorString: String?) -> Void) {
         
         // Method Parameters
         let methodParameters: [String: String!] = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.SearchMethod,
             Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
-            Constants.FlickrParameterKeys.BoundingBox: bboxString(pin),
             Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.OutputFormat: Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
             Constants.FlickrParameterKeys.PerPage: Constants.FlickrParameterValues.PicsPerPage,
-            Constants.FlickrParameterKeys.Page: Constants.FlickrParameterValues.NumOfPages
+            Constants.FlickrParameterKeys.Page: Constants.FlickrParameterValues.NumOfPages,
+            Constants.FlickrParameterKeys.License: Constants.FlickrParameterValues.LicenseSearch,
+            Constants.FlickrParameterKeys.Text: word
         ]
         
         // Add numPages
         var withPageDictionary = methodParameters
-        withPageDictionary["page"] = String(pin.numPages)
+        //withPageDictionary["page"] = String(pin.numPages)
         
         /* 2. Make the request */
         taskForGETMethod(withPageDictionary) { (success, results, error) in
@@ -48,6 +51,7 @@ extension FlickrAPI {
                     where stat == "ok"
                     else {
                         print("Flickr API returned an error. See error code and message in \(results)")
+                        
                         completionHandlerForPhotos(success: false, result: nil, errorString: "There was an error with the Flickr service.")
                         return
                 }
@@ -103,16 +107,21 @@ extension FlickrAPI {
                         }
                         
                         performOnMain {
-                            let photoObject = Photo(pin: pin, photoName: photoName, photoPath:photoPath, context:  self.sharedContext)
+                     //     let photoObject = Noun(madlib: MadLib, name: photoName, path:photoPath, context:  self.sharedContext)
                             CoreDataStackManager.sharedInstance().saveContext()
+                        
+                       //     print (photoObject)
+                        
                         }
                     }
                     
                     performOnMain {
-                        pin.numPages = pin.numPages + 1
+                 //       pin.numPages = pin.numPages + 1
                     }
                     
                     completionHandlerForPhotos(success: true, result: nil, errorString: nil)
+                    
+
                 }
                 
             }
@@ -121,33 +130,8 @@ extension FlickrAPI {
         
     }//END OF FUNC: getPhotos
     
-    func displayPhoto(photo: Photo, completionHandlerDisplay: (success: Bool, errorString: String?) -> Void) {
-        
-        // citation: http://stackoverflow.com/questions/28868894/swift-url-reponse-is-nil
-        let session = NSURLSession.sharedSession()
-        let imageURL = NSURL(string: photo.photoPath)
-        
-        let sessionTask = session.dataTaskWithURL(imageURL!) { data, response, error in
-            
-            // GUARD: Was data returned?
-            guard let data = data
-                else {
-                    completionHandlerDisplay(success: false, errorString: error?.localizedDescription)
-                    return
-            }
-            
-            performOnMain {
-                photo.photoImage = UIImage(data: data)
-            }
-            //DEBUG: print (photo.photoImage)
-            completionHandlerDisplay(success: true, errorString: nil)
-        }
-        
-        sessionTask.resume()
-        
-    }//END OF FUNC: displayPhoto
     
-    
+
     
     // MARK: Helper Functions
     

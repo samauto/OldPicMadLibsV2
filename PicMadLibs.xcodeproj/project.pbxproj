@@ -27,6 +27,8 @@
 		0491826A1CEE1BBD0075A137 /* FlickrAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049182691CEE1BBD0075A137 /* FlickrAPI.swift */; };
 		0491826E1CEE1BF30075A137 /* FlickrConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0491826D1CEE1BF30075A137 /* FlickrConstant.swift */; };
 		049182701CEE1C180075A137 /* FlickrConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0491826F1CEE1C180075A137 /* FlickrConvenience.swift */; };
+		04FAC7241CEE409B0080CC2B /* PML_TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FAC7231CEE409B0080CC2B /* PML_TableViewController.swift */; };
+		04FAC7261CEE43240080CC2B /* MadLibsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FAC7251CEE43240080CC2B /* MadLibsTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,8 @@
 		049182691CEE1BBD0075A137 /* FlickrAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAPI.swift; sourceTree = "<group>"; };
 		0491826D1CEE1BF30075A137 /* FlickrConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrConstant.swift; sourceTree = "<group>"; };
 		0491826F1CEE1C180075A137 /* FlickrConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrConvenience.swift; sourceTree = "<group>"; };
+		04FAC7231CEE409B0080CC2B /* PML_TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PML_TableViewController.swift; sourceTree = "<group>"; };
+		04FAC7251CEE43240080CC2B /* MadLibsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MadLibsTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,15 +127,12 @@
 		049182221CECE2AF0075A137 /* PicMadLibs */ = {
 			isa = PBXGroup;
 			children = (
+				049182231CECE2AF0075A137 /* AppDelegate.swift */,
 				0491826B1CEE1BC10075A137 /* API */,
 				049182641CEE1A900075A137 /* Controller */,
 				049182631CEE1A8A0075A137 /* View */,
 				049182621CEE1A7C0075A137 /* Model */,
-				049182231CECE2AF0075A137 /* AppDelegate.swift */,
-				049182251CECE2AF0075A137 /* PML_FormController.swift */,
-				049182561CED03230075A137 /* GDCBlackBox.swift */,
 				049182271CECE2AF0075A137 /* Main.storyboard */,
-				049182541CED01E90075A137 /* PML_ResultsController.swift */,
 				0491822D1CECE2AF0075A137 /* Assets.xcassets */,
 				0491822F1CECE2AF0075A137 /* LaunchScreen.storyboard */,
 				049182321CECE2AF0075A137 /* Info.plist */,
@@ -160,6 +161,7 @@
 		049182621CEE1A7C0075A137 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				049182561CED03230075A137 /* GDCBlackBox.swift */,
 				0491822A1CECE2AF0075A137 /* PicMadLibs.xcdatamodeld */,
 				049182651CEE1AD70075A137 /* CoreDataStackManager.swift */,
 				049182671CEE1B830075A137 /* ImageCache.swift */,
@@ -175,6 +177,7 @@
 		049182631CEE1A8A0075A137 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				04FAC7251CEE43240080CC2B /* MadLibsTableCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -182,6 +185,9 @@
 		049182641CEE1A900075A137 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				04FAC7231CEE409B0080CC2B /* PML_TableViewController.swift */,
+				049182251CECE2AF0075A137 /* PML_FormController.swift */,
+				049182541CED01E90075A137 /* PML_ResultsController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -343,8 +349,10 @@
 				049182241CECE2AF0075A137 /* AppDelegate.swift in Sources */,
 				049182681CEE1B830075A137 /* ImageCache.swift in Sources */,
 				0491826A1CEE1BBD0075A137 /* FlickrAPI.swift in Sources */,
+				04FAC7241CEE409B0080CC2B /* PML_TableViewController.swift in Sources */,
 				049182701CEE1C180075A137 /* FlickrConvenience.swift in Sources */,
 				0491825B1CED092E0075A137 /* MadLib.swift in Sources */,
+				04FAC7261CEE43240080CC2B /* MadLibsTableCell.swift in Sources */,
 				0491825D1CED09640075A137 /* Verb.swift in Sources */,
 				0491826E1CEE1BF30075A137 /* FlickrConstant.swift in Sources */,
 				0491822C1CECE2AF0075A137 /* PicMadLibs.xcdatamodeld in Sources */,
@@ -576,6 +584,7 @@
 				0491824D1CECE2B00075A137 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0491824E1CECE2B00075A137 /* Build configuration list for PBXNativeTarget "PicMadLibsTests" */ = {
 			isa = XCConfigurationList;
@@ -584,6 +593,7 @@
 				049182501CECE2B00075A137 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		049182511CECE2B00075A137 /* Build configuration list for PBXNativeTarget "PicMadLibsUITests" */ = {
 			isa = XCConfigurationList;
@@ -592,6 +602,7 @@
 				049182531CECE2B00075A137 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

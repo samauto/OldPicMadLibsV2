@@ -8,7 +8,7 @@
 
 import Foundation
 
-func performUIUpdatesOnMain(updates: () -> Void) {
+func performOnMain(updates: () -> Void) {
     dispatch_async(dispatch_get_main_queue()) {
         updates()
     }
