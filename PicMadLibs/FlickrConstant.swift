@@ -122,7 +122,7 @@ struct Constants {
         static let MediumURL = "url_m"
         
         // PerPage
-        static let PicsPerPage = "4"
+        static let PicsPerPage = "1"
         
         // Page
         static let NumOfPages = "2"

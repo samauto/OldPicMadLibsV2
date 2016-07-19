@@ -1,5 +1,5 @@
 //
-//  Adjective.swift
+//  AdverbPhoto.swift
 //  PicMadLibs
 //
 //  Created by Mac on 5/18/16.
@@ -9,11 +9,11 @@
 import CoreData
 import UIKit
 
-class Adjective: NSManagedObject {
+class AdverbPhoto: NSManagedObject {
     
     // MARK: PROPERTIES
-    @NSManaged var adjectiveName: String
-    @NSManaged var adjectivePath: String
+    @NSManaged var wordName:String
+    @NSManaged var wordPath: String
     @NSManaged var madlib: MadLib
     
     
@@ -27,32 +27,32 @@ class Adjective: NSManagedObject {
     
     
     // Init photo
-    init(madlib: MadLib, name: String, path: String, context: NSManagedObjectContext) {
+    init(madlib: MadLib, wName: String, wPath: String, context: NSManagedObjectContext) {
         
         // Core Data
-        let entity =  NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
+        let entity =  NSEntityDescription.entityForName("AdverbPhoto", inManagedObjectContext: context)!
         super.init(entity: entity,insertIntoManagedObjectContext: context)
         
         // Initialize stored properties
-        self.adjectiveName = name
+        self.wordName = wName
+        self.wordPath =  wPath
         self.madlib = madlib
-        self.adjectivePath =  path
         
     }//END OF INIT
     
     
     // MARK: Image
-    var photoAjectiveImage:UIImage? {
+    var photoWordImage:UIImage? {
         
         // Getting and setting filename as URL's last component
         get {
-            return FlickrAPI.Caches.imageCache.imageWithIdentifier(adjectiveName)
+            return FlickrAPI.Caches.imageCache.imageWithIdentifier(wordName)
         }
         
         set {
-            FlickrAPI.Caches.imageCache.storeImage(newValue, withIdentifier: adjectiveName)
+            FlickrAPI.Caches.imageCache.storeImage(newValue, withIdentifier: wordName)
         }
-    }//END OF VAR: photoAdjeciveImage
+    }//END OF VAR: photoWordImage
     
-}//END OF CLASS: Photo
+}//END OF CLASS: Adverb
 

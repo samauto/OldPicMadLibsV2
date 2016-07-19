@@ -17,14 +17,17 @@ import CoreData
 class MadLib: NSManagedObject {
         
     @NSManaged var madlibID: NSString
-    @NSManaged var nouns: [Noun]
-    @NSManaged var verbs: [Verb]
-    @NSManaged var adverbs: [Adverb]
-    @NSManaged var adjectives: [Adjective]
+    @NSManaged var nouns: NSString
+    @NSManaged var verbs: NSString
+    @NSManaged var adverbs: NSString
+    @NSManaged var adjectives: NSString
     
-    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+    @NSManaged var wordPhoto: [WordPhoto]
+    @NSManaged var nounPhoto: [NounPhoto]
+    @NSManaged var verbPhoto: [VerbPhoto]
+    @NSManaged var adverbPhoto: [AdverbPhoto]
+    @NSManaged var adjectivePhoto: [AdjectivePhoto]
     
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("madlibs")
     let imageCache = ImageCache()
     
     // MARK: Core Data
@@ -38,7 +41,7 @@ class MadLib: NSManagedObject {
     }//END OF INIT
     
     
-    init(madID: String, context: NSManagedObjectContext) {
+    init(madID: String, noun: String, verb: String, adverb: String, adjective: String,  context: NSManagedObjectContext) {
         
         // Core Data
         
@@ -47,11 +50,18 @@ class MadLib: NSManagedObject {
         
         // Initialize stored properties
         madlibID = madID
+        nouns = noun
+        verbs = verb
+        adverbs = adverb
+        adjectives = adjective
+        
     }//END OF INIT
     
-    
+
+
+
     //MARK: Photos
-    
+ /*
     func deleteNounPhotos() {
         
         for noun in nouns {
@@ -137,6 +147,6 @@ class MadLib: NSManagedObject {
     }
     
     
-
+*/
     
-}//END OF CLASS: Pin
+} //END OF CLASS: Pin

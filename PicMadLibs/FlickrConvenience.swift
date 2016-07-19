@@ -21,7 +21,7 @@ extension FlickrAPI {
     // MARK: GET Convenience Methods
     
     // Get Flickr Photos
-    func getPhotos(word: String, completionHandlerForPhotos: (success: Bool, result: AnyObject!,errorString: String?) -> Void) {
+    func getPhotos(madlib: MadLib, word: String, type: String, completionHandlerForPhotos: (success: Bool, result: AnyObject!, errorString: String?) -> Void) {
         
         // Method Parameters
         let methodParameters: [String: String!] = [
@@ -36,6 +36,8 @@ extension FlickrAPI {
             Constants.FlickrParameterKeys.License: Constants.FlickrParameterValues.LicenseSearch,
             Constants.FlickrParameterKeys.Text: word
         ]
+        
+        //DEBUG: print (methodParameters)
         
         // Add numPages
         var withPageDictionary = methodParameters
@@ -96,7 +98,8 @@ extension FlickrAPI {
                                 print("Cannot find key 'url_m' in \(photo)")
                                 completionHandlerForPhotos(success: false, result: nil, errorString: "There was an error reading the photo data.")
                                 return
-                        }
+                            }
+                        //DEBUG: print ("PATH", photoPath)
                         
                         // GUARD: Does our photo have a "ID"
                         guard let photoName = photo["id"] as? String
@@ -104,34 +107,38 @@ extension FlickrAPI {
                                 print("Cannot find key 'id' in \(photo)")
                                 completionHandlerForPhotos(success: false, result: nil, errorString: "There was an error reading the photo data.")
                                 return
-                        }
+                            }
+                        
+                        //DEBUG: print ("NAME", photoName)
                         
                         performOnMain {
-                     //     let photoObject = Noun(madlib: MadLib, name: photoName, path:photoPath, context:  self.sharedContext)
+                            print ("N=",photoName, "P=",photoPath)
+                            //let photoObject = MadLib(madID: madlib.madlibID as String, noun:madlib.nouns as String, nName: photoName, nPath: photoPath, verb:madlib.verbs as String, adverb:madlib.adverbs as String, adjective:madlib.adjectives as String, context:  self.sharedContext)
+                            if (type == "noun") {
+                                let nounObject = NounPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
+                                print("NOUNOBJECT")
+                            } else if (type == "verb") {
+                                let verbObject = VerbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
+                                print("VERBOBJECT")
+                            }
+                            else if (type == "adverb") {
+                                let adverbObject = AdverbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
+                                print("ADVERBOBJECT")
+                            }
+                            else {
+                                let adjectiveObject = AdjectivePhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
+                                print("ADJECTIVEOBJECT")
+                            }
                             CoreDataStackManager.sharedInstance().saveContext()
-                        
-                       //     print (photoObject)
-                        
                         }
                     }
-                    
-                    performOnMain {
-                 //       pin.numPages = pin.numPages + 1
-                    }
-                    
                     completionHandlerForPhotos(success: true, result: nil, errorString: nil)
-                    
-
                 }
-                
             }
-            
         }
         
     }//END OF FUNC: getPhotos
     
-    
-
     
     // MARK: Helper Functions
     

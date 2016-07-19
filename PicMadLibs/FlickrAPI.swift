@@ -25,9 +25,12 @@ class FlickrAPI: NSObject {
     // MARK: GET Photos
     func taskForGETMethod(method:[String:AnyObject], completionHandlerForGET: (success: Bool, result: AnyObject!, errorString: String?) -> Void) -> NSURLSessionDataTask{
         
+        //DEBUG print("METHOD", method)
+        
         //create the request
         let request = NSURLRequest(URL: flickrURLFromParameters(method))
-        //DEBUG: print("REQUEST", request)
+        
+        //DEBUG print("REQUEST", request)
         
         /* 4. Make the request */
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
@@ -57,6 +60,8 @@ class FlickrAPI: NSObject {
         
         /* 7. Start the request */
         task.resume()
+        
+        //DEBUG print ("TASK",task)
         
         return task
     }//END OF FUNC: taskForGETMethod
