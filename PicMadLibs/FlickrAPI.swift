@@ -104,6 +104,7 @@ class FlickrAPI: NSObject {
         
     }//END OF FUNC: flickrURLFromParameters
     
+    
     // Shared Instance
     class func sharedInstance() -> FlickrAPI {
         struct Singleton {
@@ -116,7 +117,7 @@ class FlickrAPI: NSObject {
     
     
     //This function returns a task to download photo data given the photo's Flickr URL
-    func taskForPhoto (photoURL: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+    func taskForPhoto (photoURL: String, completionHandler: (success: Bool, imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
         
         let url = NSURL(string: photoURL)
         let request = NSURLRequest(URL: url!)
@@ -124,30 +125,24 @@ class FlickrAPI: NSObject {
         let task = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             
             if let _ = error {
-                completionHandler(imageData: nil, error: NSError(domain: "taskForPhoto", code: 0, userInfo: [NSLocalizedDescriptionKey : "error with photo download request"]))
+                completionHandler(success: false, imageData: nil, error: NSError(domain: "taskForPhoto", code: 0, userInfo: [NSLocalizedDescriptionKey : "error with photo download request"]))
             } else {
-                completionHandler(imageData: data, error: nil)
+                completionHandler(success: true, imageData: data, error: nil)
             }
-            
-            
         }
         
         task.resume()
         
         return task
         
-    }
-    
-    
+    }//END OF FUNC: taskForPhoto
     
     
     // MARK: - Shared Image Cache
     
     struct Caches {
-        
         static let imageCache = ImageCache()
         
     }//End OF STRUCT: Caches
     
 }//END OF CLASS: FlickrAPI
-

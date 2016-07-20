@@ -28,6 +28,8 @@ class MadLib: NSManagedObject {
     @NSManaged var adverbPhoto: [AdverbPhoto]
     @NSManaged var adjectivePhoto: [AdjectivePhoto]
     
+    @NSManaged var timeStamp: NSDate
+    
     let imageCache = ImageCache()
     
     // MARK: Core Data
@@ -41,7 +43,7 @@ class MadLib: NSManagedObject {
     }//END OF INIT
     
     
-    init(madID: String, noun: String, verb: String, adverb: String, adjective: String,  context: NSManagedObjectContext) {
+    init(madID: String, noun: String, verb: String, adverb: String, adjective: String, context: NSManagedObjectContext) {
         
         // Core Data
         
@@ -54,6 +56,8 @@ class MadLib: NSManagedObject {
         verbs = verb
         adverbs = adverb
         adjectives = adjective
+        
+        timeStamp = NSDate()
         
     }//END OF INIT
     

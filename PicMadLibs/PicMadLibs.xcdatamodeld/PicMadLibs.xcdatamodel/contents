@@ -15,6 +15,7 @@
         <attribute name="adverbs" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="madlibID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nouns" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="verbs" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="adjectivephoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdjectivePhoto" inverseName="madlib" inverseEntity="AdjectivePhoto" syncable="YES"/>
         <relationship name="adverbphoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdverbPhoto" inverseName="madlib" inverseEntity="AdverbPhoto" syncable="YES"/>
@@ -40,7 +41,7 @@
     <elements>
         <element name="AdjectivePhoto" positionX="-9" positionY="81" width="128" height="90"/>
         <element name="AdverbPhoto" positionX="-27" positionY="72" width="128" height="90"/>
-        <element name="MadLib" positionX="-54" positionY="18" width="128" height="195"/>
+        <element name="MadLib" positionX="-54" positionY="18" width="128" height="210"/>
         <element name="NounPhoto" positionX="-54" positionY="54" width="128" height="90"/>
         <element name="VerbPhoto" positionX="-45" positionY="63" width="128" height="90"/>
         <element name="WordPhoto" positionX="-27" positionY="72" width="128" height="90"/>

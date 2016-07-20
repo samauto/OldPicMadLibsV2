@@ -15,9 +15,6 @@ import Foundation
 
 extension FlickrAPI {
     
-    //USER ENTERS NOUN = Text Parameter
-    //
-    
     // MARK: GET Convenience Methods
     
     // Get Flickr Photos
@@ -39,12 +36,8 @@ extension FlickrAPI {
         
         //DEBUG: print (methodParameters)
         
-        // Add numPages
-        var withPageDictionary = methodParameters
-        //withPageDictionary["page"] = String(pin.numPages)
-        
         /* 2. Make the request */
-        taskForGETMethod(withPageDictionary) { (success, results, error) in
+        taskForGETMethod(methodParameters) { (success, results, error) in
             if let error = error {
                 print ("JSON Error")
             } else {
@@ -53,7 +46,6 @@ extension FlickrAPI {
                     where stat == "ok"
                     else {
                         print("Flickr API returned an error. See error code and message in \(results)")
-                        
                         completionHandlerForPhotos(success: false, result: nil, errorString: "There was an error with the Flickr service.")
                         return
                 }
@@ -99,6 +91,7 @@ extension FlickrAPI {
                                 completionHandlerForPhotos(success: false, result: nil, errorString: "There was an error reading the photo data.")
                                 return
                             }
+                        
                         //DEBUG: print ("PATH", photoPath)
                         
                         // GUARD: Does our photo have a "ID"
@@ -112,23 +105,19 @@ extension FlickrAPI {
                         //DEBUG: print ("NAME", photoName)
                         
                         performOnMain {
-                            print ("N=",photoName, "P=",photoPath)
-                            //let photoObject = MadLib(madID: madlib.madlibID as String, noun:madlib.nouns as String, nName: photoName, nPath: photoPath, verb:madlib.verbs as String, adverb:madlib.adverbs as String, adjective:madlib.adjectives as String, context:  self.sharedContext)
                             if (type == "noun") {
                                 let nounObject = NounPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                                print("NOUNOBJECT")
+                            
                             } else if (type == "verb") {
                                 let verbObject = VerbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                                print("VERBOBJECT")
-                            }
-                            else if (type == "adverb") {
+                            
+                            } else if (type == "adverb") {
                                 let adverbObject = AdverbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                                print("ADVERBOBJECT")
-                            }
-                            else {
+                            
+                            } else {
                                 let adjectiveObject = AdjectivePhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                                print("ADJECTIVEOBJECT")
                             }
+                            
                             CoreDataStackManager.sharedInstance().saveContext()
                         }
                     }
@@ -138,52 +127,14 @@ extension FlickrAPI {
         }
         
     }//END OF FUNC: getPhotos
-    
-    
-    // MARK: Helper Functions
-    
-    /* Set the box boundaries of the search for the pin location */
-    func bboxString(pin: MKAnnotation) -> String {
-        // ensure bbox is bounded by minimum and maximums
-        
-        let latitude = pin.coordinate.latitude
-        let longitude = pin.coordinate.longitude
-        
-        /* |-------------------| */
-        /* |    MAX LATITUDE   | */
-        /* |                   | */
-        /* |      LATITUDE     | */
-        /* |                   | */
-        /* |    MIN LATITUDE   | */
-        /* |-------------------| */
-        
-        let max_lat = min(latitude + Constants.FlickrSearchParameters.SearchHeight, Constants.FlickrSearchParameters.SearchLatRange.1)
-        let min_lat = max(latitude - Constants.FlickrSearchParameters.SearchHeight, Constants.FlickrSearchParameters.SearchLatRange.0)
-        
-        /* |---------------------| */
-        /* |    MAX LONGITUDE    | */
-        /* |                     | */
-        /* |      LONGITUDE      | */
-        /* |                     | */
-        /* |    MIN LONGITUDE    | */
-        /* |---------------------| */
-        
-        let max_long = min(longitude + Constants.FlickrSearchParameters.SearchWidth, Constants.FlickrSearchParameters.SearchLonRange.1)
-        let min_long = max(longitude - Constants.FlickrSearchParameters.SearchWidth, Constants.FlickrSearchParameters.SearchLonRange.0)
-        
-        //print("BoundingBox", "\(min_long),\(min_lat),\(max_long),\(max_lat)")
-        return "\(min_long),\(min_lat),\(max_long),\(max_lat)"
-        
-    }//END OF FUNC: bboxString
-    
+
     
     // MARK: - Core Data Convenience
     
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }
-    
-    
+        
 }//END OF EXTENSION: FlickrAPI
 
 
