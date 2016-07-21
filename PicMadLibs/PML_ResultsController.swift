@@ -16,11 +16,18 @@ class PML_ResultsController: UIViewController, NSFetchedResultsControllerDelegat
     // MARK: Variables
     
     var selMadList: MadLib!
+    var newOrupdate: String = "Update"
     
     var NounInput: String?
     var VerbInput: String?
     var AdverbInput: String?
     var AdjectiveInput: String?
+    
+    var NounImage: UIImage?
+    var VerbImage: UIImage?
+    var AdverbImage: UIImage?
+    var AdjectiveImage: UIImage?
+    
     
     @IBOutlet weak var adjectiveDisplay: UILabel!
     @IBOutlet weak var nounDisplay: UILabel!
@@ -32,12 +39,14 @@ class PML_ResultsController: UIViewController, NSFetchedResultsControllerDelegat
     @IBOutlet weak var verbPhotoDisplay: UIImageView!
     @IBOutlet weak var adverbPhotoDisplay: UIImageView!
 
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    
     
     // MARK: VIEW
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Set up views if editing an existing PicMadLib.
         if let madList = selMadList {
             navigationItem.title = madList.madlibID as String
@@ -46,11 +55,21 @@ class PML_ResultsController: UIViewController, NSFetchedResultsControllerDelegat
             verbDisplay.text = madList.verbs as String
             adverbDisplay.text = madList.adverbs as String
             adjectiveDisplay.text = madList.adjectives as String
-
-            loadWordImage("NounPhoto", picMadLib: madList)
-            loadWordImage("VerbPhoto", picMadLib: madList)
-            loadWordImage("AdverbPhoto", picMadLib: madList)
-            loadWordImage("AdjectivePhoto", picMadLib: madList)
+            
+            if (newOrupdate == "New") {
+                cancelButton.title = "Home"
+                //loadWordImage("NounPhoto", picMadLib: madList)
+                
+                nounPhotoDisplay.image = UIImage(named: "Placeholder")
+                verbPhotoDisplay.image = UIImage(named: "Placeholder")
+                adverbPhotoDisplay.image = UIImage(named: "Placeholder")
+                adjectivePhotoDisplay.image = UIImage(named: "Placeholder")
+            } else {
+                loadWordImage("NounPhoto", picMadLib: madList)
+                loadWordImage("VerbPhoto", picMadLib: madList)
+                loadWordImage("AdverbPhoto", picMadLib: madList)
+                loadWordImage("AdjectivePhoto", picMadLib: madList)
+            }
         }
         
     }//END OF FUNC: viewDidLoad
@@ -152,19 +171,43 @@ class PML_ResultsController: UIViewController, NSFetchedResultsControllerDelegat
         task.resume()
         
     }//END OF FUNC: load_image
+    
+    // Function to GENERATE the PicMadLib Image
+    func generatePML() -> UIImage {
+        
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawViewHierarchyInRect(view.frame, afterScreenUpdates: true)
+        let PMLImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
 
+        return PMLImage
+    }//END OF FUNC: generatePML
+    
+    
+    // Function to Share the PicMadLib
+    @IBAction func picmadlibShare(sender: AnyObject) {
+
+        let PMLImage = generatePML()
+        let activityController = UIActivityViewController(activityItems: [PMLImage], applicationActivities: nil)
+        
+        activityController.completionWithItemsHandler = {
+            activity, completed, returned, error in
+            }
+        presentViewController(activityController, animated: true, completion: nil)
+    }
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "UpdatePML" {
-            let madlibUpdate = segue.destinationViewController as! PML_FormController
+
+            let PML_Form_NavigationController = segue.destinationViewController as! UINavigationController
+            let madlibUpdate = PML_Form_NavigationController.topViewController as! PML_FormController
+
+          //  let madlibUpdate = segue.destinationViewController as! PML_FormController
                 let selectedMadlib = selMadList
                 madlibUpdate.madList = selectedMadlib
         }
             
-       // else if segue.identifier == "AddItem" {
-       //     print("Adding new madlib.")
-       // }
-        
     }//END OF FUNC prepareForSegue
 
     
@@ -176,15 +219,23 @@ class PML_ResultsController: UIViewController, NSFetchedResultsControllerDelegat
     
     
     @IBAction func cancelPressed(sender: AnyObject) {
-        // Depending on style of presentation (modal or push presentation), this view controller needs to be dismissed in two different ways.
-        let isPresentingInAddMadLibMode = presentingViewController is UINavigationController
         
-        if isPresentingInAddMadLibMode {
-            dismissViewControllerAnimated(true, completion: nil)
+        if (newOrupdate == "New"){
+        print("pressed")
             
         } else {
-            navigationController!.popViewControllerAnimated(true)
+            let isPresentingInAddMadLibMode = presentingViewController is UINavigationController
+        
+            if isPresentingInAddMadLibMode {
+                dismissViewControllerAnimated(true, completion: nil)
+            
+            } else {
+                navigationController!.popViewControllerAnimated(true)
+            }
         }
+        
+        
+        
     }//END OF FUNC cancelPressed
 
     

@@ -22,7 +22,6 @@ class MadLib: NSManagedObject {
     @NSManaged var adverbs: NSString
     @NSManaged var adjectives: NSString
     
-    @NSManaged var wordPhoto: [WordPhoto]
     @NSManaged var nounPhoto: [NounPhoto]
     @NSManaged var verbPhoto: [VerbPhoto]
     @NSManaged var adverbPhoto: [AdverbPhoto]

@@ -16,6 +16,7 @@ import Foundation
 extension FlickrAPI {
     
     // MARK: GET Convenience Methods
+
     
     // Get Flickr Photos
     func getPhotos(madlib: MadLib, word: String, type: String, completionHandlerForPhotos: (success: Bool, result: AnyObject!, errorString: String?) -> Void) {
@@ -104,22 +105,20 @@ extension FlickrAPI {
                         
                         //DEBUG: print ("NAME", photoName)
                         
-                        performOnMain {
+                        
                             if (type == "noun") {
                                 let nounObject = NounPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            
                             } else if (type == "verb") {
                                 let verbObject = VerbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            
                             } else if (type == "adverb") {
                                 let adverbObject = AdverbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            
                             } else {
                                 let adjectiveObject = AdjectivePhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
                             }
                             
                             CoreDataStackManager.sharedInstance().saveContext()
-                        }
+                        
+
                     }
                     completionHandlerForPhotos(success: true, result: nil, errorString: nil)
                 }

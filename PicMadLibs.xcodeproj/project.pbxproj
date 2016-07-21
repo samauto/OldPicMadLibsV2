@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		042FC1A51D3E60EC00850396 /* WordPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FC1A41D3E60EC00850396 /* WordPhoto.swift */; };
 		049182241CECE2AF0075A137 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049182231CECE2AF0075A137 /* AppDelegate.swift */; };
 		049182261CECE2AF0075A137 /* PML_FormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049182251CECE2AF0075A137 /* PML_FormController.swift */; };
 		049182291CECE2AF0075A137 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049182271CECE2AF0075A137 /* Main.storyboard */; };
@@ -50,7 +49,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		042FC1A41D3E60EC00850396 /* WordPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WordPhoto.swift; sourceTree = "<group>"; };
 		049182201CECE2AF0075A137 /* PicMadLibs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicMadLibs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049182231CECE2AF0075A137 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		049182251CECE2AF0075A137 /* PML_FormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PML_FormController.swift; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 				049182651CEE1AD70075A137 /* CoreDataStackManager.swift */,
 				049182671CEE1B830075A137 /* ImageCache.swift */,
 				049182581CED08370075A137 /* NounPhoto.swift */,
-				042FC1A41D3E60EC00850396 /* WordPhoto.swift */,
 				0491825C1CED09640075A137 /* VerbPhoto.swift */,
 				0491825E1CED09750075A137 /* AdverbPhoto.swift */,
 				049182601CED09870075A137 /* AdjectivePhoto.swift */,
@@ -352,7 +349,6 @@
 				049182241CECE2AF0075A137 /* AppDelegate.swift in Sources */,
 				049182681CEE1B830075A137 /* ImageCache.swift in Sources */,
 				0491826A1CEE1BBD0075A137 /* FlickrAPI.swift in Sources */,
-				042FC1A51D3E60EC00850396 /* WordPhoto.swift in Sources */,
 				04FAC7241CEE409B0080CC2B /* PML_TableViewController.swift in Sources */,
 				049182701CEE1C180075A137 /* FlickrConvenience.swift in Sources */,
 				0491825B1CED092E0075A137 /* MadLib.swift in Sources */,

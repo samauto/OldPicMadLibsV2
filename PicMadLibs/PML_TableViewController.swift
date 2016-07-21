@@ -42,11 +42,9 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
         noPicMadLibsLabel.numberOfLines = 2
         noPicMadLibsLabel.sizeToFit()
         noPicMadLibsLabel.font = UIFont(name: "HelveticaNeue", size: 25)!
+        noPicMadLibsLabel.textColor = UIColor.whiteColor()
         tableView.backgroundView = noPicMadLibsLabel
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        
-        // Left Side: Use the edit button item provided by the table view controller.
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
         // Loads the PicMadLibs
         if let savedPicMadLibs = loadMadLibs() {
@@ -58,7 +56,7 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.tableView.reloadData()
+        //self.tableView.reloadData()
         // reload at this point
         
     }
@@ -81,9 +79,11 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (madLists.count > 0) {
             noPicMadLibsLabel.hidden = true
+            self.navigationItem.leftBarButtonItem = self.editButtonItem()
         }
         else {
             noPicMadLibsLabel.hidden = false
+            self.navigationItem.leftBarButtonItem = nil
         }
         // Return the number of rows
         return madLists.count
@@ -101,8 +101,12 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
         let madList = madLists[indexPath.row]
         
         
+        let date = madList.timeStamp
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM-dd-yyyy hh:mm:ss"
+        let dateString = dateFormatter.stringFromDate(date)
         
-        cell.PML_Title.text = madList.madlibID as String
+        cell.PML_Title.text = dateString
         
         loadImage("NounPhoto", picMadLib: madList) {(wordData) in
             cell.NounPhoto.image = UIImage(data:wordData!)
@@ -144,7 +148,7 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                     }
                 
                 } else {
-                    print("No "+entityWord)
+                    print("TbleView No "+entityWord)
                 }
             }
             else if (entityWord=="VerbPhoto") {
@@ -157,7 +161,7 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                     }
                     
                 } else {
-                    print("No "+entityWord)
+                    print("TbleView No "+entityWord)
                 }
             }
             else if (entityWord=="AdverbPhoto") {
@@ -170,7 +174,7 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                     }
                     
                 } else {
-                    print("No "+entityWord)
+                    print("TbleView No "+entityWord)
                 }
             }
             else {
@@ -183,7 +187,7 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                     }
                     
                 } else {
-                    print("No "+entityWord)
+                    print("TbleView No "+entityWord)
                 }
             }
 
@@ -204,10 +208,8 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
                 print("Error can't find find Photos via Flickr")
             }
         } else {
-            performOnMain {
                 self.wordData = imageData
                 completion(wordData: self.wordData)
-            }
         }
     }
 }//END OF FUNC: load_image
@@ -247,8 +249,11 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
         //DEBUG print ("SEGUE", segue.identifier)
         
         if segue.identifier == "DetailsPML" {
-            let madlibDetail = segue.destinationViewController as! PML_ResultsController
-    
+            print("Seeing a Detailed view of the PicsMadLib")
+ 
+            let PML_Results_NavigationController = segue.destinationViewController as! UINavigationController
+            let madlibDetail = PML_Results_NavigationController.topViewController as! PML_ResultsController
+            
             // Get the cell that generated this segue.
             if let detailsMadlibCell = sender as? MadLibsTableCell {
                 let indexPath = tableView.indexPathForCell(detailsMadlibCell)!
@@ -258,28 +263,15 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
             }
         }
         
-        else if segue.identifier == "UpdatePML" {
-            let madlibUpdate = segue.destinationViewController as! PML_FormController
-            
-            // Get the cell that generated this segue.
-            if let selectedMadlibCell = sender as? MadLibsTableCell {
-                let indexPath = tableView.indexPathForCell(selectedMadlibCell)!
-                let selectedMadlib = madLists[indexPath.row]
-                madlibUpdate.madList = selectedMadlib
-                //DEBUG print("Update the madlib")
-            }
-        }
         else if segue.identifier == "AddPML" {
-            print("Adding new madlib.")
+            print("Adding new PicMadLib.")
         }
  
     }//END OF FUNC prepareForSegue
     
     
     @IBAction func unwindToMadLibList(sender: UIStoryboardSegue) {
-
-        if let sourceViewController = sender.sourceViewController as? PML_FormController, madList = sourceViewController.madList {
-            
+        if let sourceViewController = sender.sourceViewController as? PML_ResultsController, madList = sourceViewController.selMadList{
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
                 // Update an existing PicMadLib
                 madLists[selectedIndexPath.row] = madList

@@ -17,6 +17,7 @@ class FlickrAPI: NSObject {
     //create the session
     var session = NSURLSession.sharedSession()
     
+    
     // MARK: Initializers
     override init() {
         super.init()

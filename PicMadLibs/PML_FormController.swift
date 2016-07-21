@@ -14,6 +14,7 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
 
     
     // MARK: PROPERTIES
+    var wordData : NSData? = nil
 
     // MARK: NOUN
     @IBOutlet weak var nounInfo: UIButton!
@@ -39,6 +40,10 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
     @IBOutlet weak var formMessage: UILabel!
     
     var madList: MadLib?
+    var nounList: NounPhoto?
+    var verbList: VerbPhoto?
+    var adverbList: AdverbPhoto?
+    var adjectiveList: AdjectivePhoto?
     
     
     // MARK: VIEW
@@ -46,7 +51,7 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
         super.viewDidLoad()
         formMessage.hidden = true
 
-        // Set up views if editing an existing Meal.
+        // Set up views if editing an existing MadLib.
         if let madList = madList {
             navigationItem.title = madList.madlibID as String
             nounInput.text = madList.nouns as String
@@ -126,18 +131,134 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
     
     // This method lets you configure a view controller before it's presented.
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        //DEBUG print("SENDER",sender!)
-        let madlibDetail = segue.destinationViewController as! PML_ResultsController
+        if segue.identifier == "ResultsPML" {
+            
+            let PML_Results_NavigationController = segue.destinationViewController as! UINavigationController
+            let madlibDetail = PML_Results_NavigationController.topViewController as! PML_ResultsController
+            
+            //let madlibDetail = segue.destinationViewController as! PML_ResultsController
+            // Get the cell that generated this segue.
+            madlibDetail.selMadList = self.madList
+            
+            madlibDetail.newOrupdate = "New"
+            
+  /*
+            loadImage("NounPhoto", picMadLib: self.madList!) {(wordData) in
+               print("nountest",wordData)            }
+            
+            loadImage("VerbPhoto", picMadLib: madList!){(wordData) in
+                print("vebtest",wordData)
+            }
+            
+            loadImage("AdverbPhoto", picMadLib: madList!){(wordData) in
+                print("advtest",wordData)
+            }
+            
+            loadImage("AdjectivePhoto", picMadLib: madList!){(wordData) in
+                print("nadjest",wordData)
+                //cell.AdjectivePhoto.image = UIImage(data:wordData!)
+            }
+*/
+        }
+        
+    }//END OF FUNC: prepareForSeque
+    
+    
+    func loadImage(entityWord: String, picMadLib: MadLib, completion: (wordData: NSData?) -> Void)
+    {
+        let request = NSFetchRequest(entityName: entityWord)
+        request.sortDescriptors = []
+        request.predicate = NSPredicate(format: "madlib == %@", picMadLib);
+        
+        do {
+            if (entityWord=="NounPhoto") {
+                let results = try sharedContext.executeFetchRequest(request) as! [NounPhoto]
+                if (results.count > 0) {
+                    for result in results {
+                        wordImageData(result.wordPath){ (wordData) in
+                            completion(wordData: self.wordData)
+                        }
+                    }
+                    
+                } else {
+                    print("Form No "+entityWord)
+                }
+            }
+            else if (entityWord=="VerbPhoto") {
+                let results = try sharedContext.executeFetchRequest(request) as! [VerbPhoto]
+                if (results.count > 0) {
+                    for result in results {
+                        wordImageData(result.wordPath){ (wordData) in
+                            completion(wordData: self.wordData)
+                        }
+                    }
+                    
+                } else {
+                    print("Form No "+entityWord)
+                }
+            }
+            else if (entityWord=="AdverbPhoto") {
+                let results = try sharedContext.executeFetchRequest(request) as! [AdverbPhoto]
+                if (results.count > 0) {
+                    for result in results {
+                        wordImageData(result.wordPath){ (wordData) in
+                            completion(wordData: self.wordData)
+                        }
+                    }
+                    
+                } else {
+                    print("Form No "+entityWord)
+                }
+            }
+            else {
+                let results = try sharedContext.executeFetchRequest(request) as! [AdjectivePhoto]
+                if (results.count > 0) {
+                    for result in results {
+                        wordImageData(result.wordPath){ (wordData) in
+                            completion(wordData: self.wordData)
+                        }
+                    }
+                    
+                } else {
+                    print("Form No "+entityWord)
+                }
+            }
+            
+        } catch let error as NSError {
+            // failure
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+    }//END OF FUNC: loadWordImage
+    
+    
+    func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
+    {
+        FlickrAPI.sharedInstance().taskForPhoto(wordPath) { (success, imageData, error) in
+            if (success == false) {
+
+                    print("Error can't find find Photos via Flickr")
+
+            } else {
+
+                    self.wordData = imageData
+                    completion(wordData: self.wordData)
+
+            }
+        }
+    }//END OF FUNC: load_image
+
+    
+    @IBAction func generatePressed(sender: AnyObject) {
         if (generatePicMadLib === sender) || (generateRandom === sender) {
             
-            
             let randID = Int(arc4random_uniform(1000000) + 1)
-            let tempID = "PicMadLib"+String(randID)
+            let tempID = "PicMadLib_"+String(randID)
             
             if (nounInput.text == "") {
                 nounInput.text = randomWord("Noun")
             }
-           
+            
             if (verbInput.text == "") {
                 verbInput.text = randomWord("Verb")
             }
@@ -151,17 +272,18 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
             }
             
             //Add the new or updated MadLib to the List
-            madList = MadLib(madID: tempID, noun: self.nounInput.text!, verb: self.verbInput.text!, adverb: self.adverbInput.text!, adjective: self.adjectiveInput.text!, context: self.sharedContext)
-            CoreDataStackManager.sharedInstance().saveContext()
+
+                madList = MadLib(madID: tempID, noun: self.nounInput.text!, verb: self.verbInput.text!, adverb: self.adverbInput.text!, adjective: self.adjectiveInput.text!, context: self.sharedContext)
             
-            self.findPhotos(madList!, noun: self.nounInput.text!,  verb: self.verbInput.text!,  adverb: self.adverbInput.text!,  adjective: self.adjectiveInput.text!)
+                findPhotos(madList!, noun: self.nounInput.text!,  verb: self.verbInput.text!,  adverb: self.adverbInput.text!,  adjective: self.adjectiveInput.text!)
+                
+                CoreDataStackManager.sharedInstance().saveContext()
         }
         
-    }//END OF FUNC: prepareForSeque
-    
-    
-    @IBAction func generatePressed(sender: AnyObject) {
     }//END OF FUNC: generatePressed
+    
+    
+    
     
     @IBAction func generateRandom(sender: AnyObject) {
             nounInput.text = randomWord("Noun")
@@ -210,6 +332,7 @@ class PML_FormController: UIViewController, UITextFieldDelegate, UINavigationCon
                 }
             }
         }
+
             
         FlickrAPI.sharedInstance().getPhotos(madlib, word: verb, type: "verb") { (success, results, errorString) in
             if success == false {
