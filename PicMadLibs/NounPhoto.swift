@@ -11,12 +11,6 @@ import UIKit
 
 class NounPhoto: NSManagedObject {
     
-    // MARK: PROPERTIES
-    @NSManaged var wordName:String
-    @NSManaged var wordPath: String
-    @NSManaged var madlib: MadLib
-    
-    
     // MARK: CoreData
     
     //Standard Core Data init method
@@ -27,7 +21,7 @@ class NounPhoto: NSManagedObject {
     
     
     // Init photo
-    init(madlib: MadLib, wName: String, wPath: String, context: NSManagedObjectContext) {
+    init(madlib: MadLib, wName: String, wPath: String, wData: NSData,  context: NSManagedObjectContext) {
         
         // Core Data
         let entity =  NSEntityDescription.entityForName("NounPhoto", inManagedObjectContext: context)!
@@ -36,6 +30,7 @@ class NounPhoto: NSManagedObject {
         // Initialize stored properties
         self.wordName = wName
         self.wordPath =  wPath
+        self.imageData = wData
         self.madlib = madlib
         
     }//END OF INIT
@@ -50,7 +45,7 @@ class NounPhoto: NSManagedObject {
         }
         
         set {
-            FlickrAPI.Caches.imageCache.storeImage(newValue, withIdentifier: wordName)
+            FlickrAPI.Caches.imageCache.storeImage(newValue, withIdentifier: wordName!)
         }
     }//END OF VAR: photoWordImage
     

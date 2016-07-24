@@ -16,18 +16,7 @@ import CoreData
 //2. Make Madlib a subclass of NSManagedObject
 class MadLib: NSManagedObject {
         
-    @NSManaged var madlibID: NSString
-    @NSManaged var nouns: NSString
-    @NSManaged var verbs: NSString
-    @NSManaged var adverbs: NSString
-    @NSManaged var adjectives: NSString
-    
-    @NSManaged var nounPhoto: [NounPhoto]
-    @NSManaged var verbPhoto: [VerbPhoto]
-    @NSManaged var adverbPhoto: [AdverbPhoto]
-    @NSManaged var adjectivePhoto: [AdjectivePhoto]
-    
-    @NSManaged var timeStamp: NSDate
+
     
     let imageCache = ImageCache()
     

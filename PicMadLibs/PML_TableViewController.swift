@@ -34,6 +34,12 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //check for Internet Connection
+        if Reachability.isConnectedToNetwork() == true {
+        } else {
+            popAlert("NO INTERNET CONNECTION", errorString: "Make sure your device is connected to the internet")
+        }
+        
         // Label to notify that there is no PicMadLibs on the list
         noPicMadLibsLabel = UILabel(frame: CGRectMake(0,0,tableView.bounds.size.width,tableView.bounds.size.height))
         noPicMadLibsLabel.text = "No PicMadLibs available. \nAdd one with the + button."
@@ -43,38 +49,27 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
         noPicMadLibsLabel.sizeToFit()
         noPicMadLibsLabel.font = UIFont(name: "HelveticaNeue", size: 25)!
         noPicMadLibsLabel.textColor = UIColor.whiteColor()
-        tableView.backgroundView = noPicMadLibsLabel
+        tableView.backgroundView = self.noPicMadLibsLabel
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        
+
         // Loads the PicMadLibs
         if let savedPicMadLibs = loadMadLibs() {
             madLists += savedPicMadLibs
         }
         
-    }//END OF FUNC viewDidLoad
+    }
+    //END OF FUNC viewDidLoad
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        //self.tableView.reloadData()
-        // reload at this point
-        
-    }
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
     // MARK: TableView Datasource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    
         // Return the number of sections
         return 1
         
-    }//END OF FUNC tableView numberOfSectionsInTableView
+    }
+    //END OF FUNC tableView numberOfSectionsInTableView
    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (madLists.count > 0) {
@@ -85,10 +80,12 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
             noPicMadLibsLabel.hidden = false
             self.navigationItem.leftBarButtonItem = nil
         }
+        
         // Return the number of rows
         return madLists.count
         
-    }//END OF FUNC tableView numberOfRowsInSection
+    }
+    //END OF FUNC tableView numberOfRowsInSection
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -99,7 +96,6 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
         
         // Fetches the appropriate madlib for the data source layout.
         let madList = madLists[indexPath.row]
-        
         
         let date = madList.timeStamp
         let dateFormatter = NSDateFormatter()
@@ -126,27 +122,54 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
 
         return cell
         
-    }//END OF FUNC tableView cellForRowAtIndexPath
+    }
+    //END OF FUNC tableView cellForRowAtIndexPath
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+
+        // Return false if you do not want the specified item to be editable.
+        return true
+        
+    }
+    //END OF FUNC tableView canEditRowAtIndexPath
     
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        switch (editingStyle) {
+            
+        case .Delete:
+
+            // Remove the PicMadlIb from the context
+            sharedContext.deleteObject(madLists[indexPath.row])
+            madLists.removeAtIndex(indexPath.row)
+            CoreDataStackManager.sharedInstance().saveContext()
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
+        default:
+            break
+        }
+        
+    }
+    //END OF FUNC tableView commitEditingStyle
+
     
+    //MARK: PHOTOS/IMAGES
     
     func loadImage(entityWord: String, picMadLib: MadLib, completion: (wordData: NSData?) -> Void)
     {
         let request = NSFetchRequest(entityName: entityWord)
         request.sortDescriptors = []
         request.predicate = NSPredicate(format: "madlib == %@", picMadLib);
-        
         do {
-           
+            
             if (entityWord=="NounPhoto") {
                 let results = try sharedContext.executeFetchRequest(request) as! [NounPhoto]
                 if (results.count > 0) {
                     for result in results {
-                        wordImageData(result.wordPath){ (wordData) in
+                        wordImageData(result.wordPath!){ (wordData) in
                             completion(wordData: self.wordData)
                         }
                     }
-                
                 } else {
                     print("TbleView No "+entityWord)
                 }
@@ -172,7 +195,6 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                             completion(wordData: self.wordData)
                         }
                     }
-                    
                 } else {
                     print("TbleView No "+entityWord)
                 }
@@ -185,68 +207,39 @@ class PML_TableViewController: UITableViewController, NSFetchedResultsController
                             completion(wordData: self.wordData)
                         }
                     }
-                    
                 } else {
                     print("TbleView No "+entityWord)
                 }
             }
-
-
+            
+            
         } catch let error as NSError {
-    // failure
-    print("Fetch failed: \(error.localizedDescription)")
-}
-
-}//END OF FUNC: loadWordImage
-
-
-func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
-{
-    FlickrAPI.sharedInstance().taskForPhoto(wordPath) { (success, imageData, error) in
-        if (success == false) {
-            performOnMain {
-                print("Error can't find find Photos via Flickr")
-            }
-        } else {
+            
+            // failure
+            popAlert("ERROR", errorString: "Fetch failed: \(error.localizedDescription)")
+        }
+        
+    }
+    //END OF FUNC: loadWordImage
+    
+    
+    func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
+    {
+        FlickrAPI.sharedInstance().taskForPhoto(wordPath) { (success, imageData, error) in
+            if (success == false) {
+                    self.popAlert("ERROR", errorString: "Error can't find Photos via Flickr")
+            } else {
                 self.wordData = imageData
                 completion(wordData: self.wordData)
+            }
         }
     }
-}//END OF FUNC: load_image
-
-
-
-
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-        
-    }//END OF FUNC tableView canEditRowAtIndexPath
-
+    //END OF FUNC: load_image
     
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        
-        switch (editingStyle) {
-            
-        case .Delete:
-            // Remove the PicMadlIb from the context
-            sharedContext.deleteObject(madLists[indexPath.row])
-            madLists.removeAtIndex(indexPath.row)
-            CoreDataStackManager.sharedInstance().saveContext()
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            
-        default:
-            break
-        }
-        
-    }//END OF FUNC tableView commitEditingStyle
-
 
     // MARK: Navigation
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        //DEBUG print ("SEGUE", segue.identifier)
         
         if segue.identifier == "DetailsPML" {
             print("Seeing a Detailed view of the PicsMadLib")
@@ -259,7 +252,6 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
                 let indexPath = tableView.indexPathForCell(detailsMadlibCell)!
                 let detailsMadlib = madLists[indexPath.row]
                 madlibDetail.selMadList = detailsMadlib
-                //DEBUG print("Show Details of madlib")
             }
         }
         
@@ -267,7 +259,8 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
             print("Adding new PicMadLib.")
         }
  
-    }//END OF FUNC prepareForSegue
+    }
+    //END OF FUNC prepareForSegue
     
     
     @IBAction func unwindToMadLibList(sender: UIStoryboardSegue) {
@@ -286,7 +279,8 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
             CoreDataStackManager.sharedInstance().saveContext()
         }
 
-    }//END OF FUNC unwind
+    }
+    //END OF FUNC unwind
     
     
     //MARK: CORE DATA: Fetch PicMadLibs
@@ -304,10 +298,25 @@ func wordImageData (wordPath:String, completion: (wordData: NSData?) -> Void)
         do {
             savedMadLibs = try sharedContext.executeFetchRequest(fetchRequest) as! [MadLib]
         } catch {
-            print ("Problem with retrieving PicMadLibs from Core Data!")
+            popAlert("ERROR",errorString: "Problem with retrieving PicMadLibs from Core Data!")
         }
         return savedMadLibs
         
-    }//END OF FUNC: loadMadLibs()
+    }
+    //END OF FUNC: loadMadLibs()
     
-}//END OF CLASS: PML_TableViewController
+    
+    //MARK: ALERTS
+    
+    //FUNC: popAlert(): Display an Alrt Box
+    func popAlert(typeOfAlert: String, errorString: String) {
+        let alertController = UIAlertController(title: typeOfAlert, message: errorString, preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    //END OF FUNC: popAlert()
+
+    
+    
+}
+//END OF CLASS: PML_TableViewController

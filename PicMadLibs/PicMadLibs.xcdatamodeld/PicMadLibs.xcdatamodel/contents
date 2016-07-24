@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Automatic">
     <entity name="AdjectivePhoto" representedClassName=".AdjectivePhoto" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="wordName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="fullRes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullRes" inverseName="thumbnailAdjective" inverseEntity="FullRes" syncable="YES"/>
         <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="adjectivephoto" inverseEntity="MadLib" syncable="YES"/>
     </entity>
     <entity name="AdverbPhoto" representedClassName=".AdverbPhoto" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="wordName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="fullRes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullRes" inverseName="thumbnailAdverb" inverseEntity="FullRes" syncable="YES"/>
         <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="adverbphoto" inverseEntity="MadLib" syncable="YES"/>
+    </entity>
+    <entity name="FullRes" representedClassName=".FullRes" syncable="YES">
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <relationship name="thumbnailAdjective" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdjectivePhoto" inverseName="fullRes" inverseEntity="AdjectivePhoto" syncable="YES"/>
+        <relationship name="thumbnailAdverb" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AdverbPhoto" inverseName="fullRes" inverseEntity="AdverbPhoto" syncable="YES"/>
+        <relationship name="thumbnailNoun" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NounPhoto" inverseName="fullRes" inverseEntity="NounPhoto" syncable="YES"/>
+        <relationship name="thumbnailVerb" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VerbPhoto" inverseName="fullRes" inverseEntity="VerbPhoto" syncable="YES"/>
     </entity>
     <entity name="MadLib" representedClassName=".MadLib" syncable="YES">
         <attribute name="adjectives" optional="YES" attributeType="String" syncable="YES"/>
@@ -23,20 +36,27 @@
         <relationship name="verbphoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VerbPhoto" inverseName="madlib" inverseEntity="VerbPhoto" syncable="YES"/>
     </entity>
     <entity name="NounPhoto" representedClassName=".NounPhoto" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="wordName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="fullRes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullRes" inverseName="thumbnailNoun" inverseEntity="FullRes" syncable="YES"/>
         <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="nounphoto" inverseEntity="MadLib" syncable="YES"/>
     </entity>
     <entity name="VerbPhoto" representedClassName=".VerbPhoto" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="wordName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="fullRes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FullRes" inverseName="thumbnailVerb" inverseEntity="FullRes" syncable="YES"/>
         <relationship name="madlib" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MadLib" inverseName="verbphoto" inverseEntity="MadLib" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AdjectivePhoto" positionX="-9" positionY="81" width="128" height="90"/>
-        <element name="AdverbPhoto" positionX="-27" positionY="72" width="128" height="90"/>
+        <element name="AdjectivePhoto" positionX="-9" positionY="81" width="128" height="135"/>
+        <element name="AdverbPhoto" positionX="-27" positionY="72" width="128" height="135"/>
+        <element name="FullRes" positionX="-27" positionY="99" width="128" height="120"/>
         <element name="MadLib" positionX="-54" positionY="18" width="128" height="195"/>
-        <element name="NounPhoto" positionX="-54" positionY="54" width="128" height="90"/>
-        <element name="VerbPhoto" positionX="-45" positionY="63" width="128" height="90"/>
+        <element name="NounPhoto" positionX="-54" positionY="54" width="128" height="135"/>
+        <element name="VerbPhoto" positionX="-45" positionY="63" width="128" height="135"/>
     </elements>
 </model>

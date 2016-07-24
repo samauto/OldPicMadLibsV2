@@ -35,8 +35,6 @@ extension FlickrAPI {
             Constants.FlickrParameterKeys.Text: word
         ]
         
-        //DEBUG: print (methodParameters)
-        
         /* 2. Make the request */
         taskForGETMethod(methodParameters) { (success, results, error) in
             if let error = error {
@@ -93,8 +91,6 @@ extension FlickrAPI {
                                 return
                             }
                         
-                        //DEBUG: print ("PATH", photoPath)
-                        
                         // GUARD: Does our photo have a "ID"
                         guard let photoName = photo["id"] as? String
                             else {
@@ -103,21 +99,26 @@ extension FlickrAPI {
                                 return
                             }
                         
-                        //DEBUG: print ("NAME", photoName)
+                        var wordData = NSData()
                         
-                        
-                            if (type == "noun") {
-                                let nounObject = NounPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            } else if (type == "verb") {
-                                let verbObject = VerbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            } else if (type == "adverb") {
-                                let adverbObject = AdverbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
-                            } else {
-                                let adjectiveObject = AdjectivePhoto(madlib: madlib, wName: photoName, wPath: photoPath, context:  self.sharedContext)
+                            let wordPhotoData = self.taskForPhoto(photoPath) { (success, imageData, error) in
+                                if (success == false) {
+                                } else {
+                                    wordData = imageData!
+                                }
+                                
+                                if (type == "noun") {
+                                    let nounObject = NounPhoto(madlib: madlib, wName: photoName, wPath: photoPath, wData: wordData, context: self.sharedContext)
+                                } else if (type == "verb") {
+                                    let verbObject = VerbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, wData: wordData, context: self.sharedContext)
+                                } else if (type == "adverb") {
+                                    let adverbObject = AdverbPhoto(madlib: madlib, wName: photoName, wPath: photoPath, wData: wordData, context: self.sharedContext)
+                                } else {
+                                    let adjectiveObject = AdjectivePhoto(madlib: madlib, wName: photoName, wPath: photoPath, wData: wordData, context: self.sharedContext)
+                                }
                             }
-                            
+
                             CoreDataStackManager.sharedInstance().saveContext()
-                        
 
                     }
                     completionHandlerForPhotos(success: true, result: nil, errorString: nil)
@@ -125,7 +126,8 @@ extension FlickrAPI {
             }
         }
         
-    }//END OF FUNC: getPhotos
+    }
+    //END OF FUNC: getPhotos
 
     
     // MARK: - Core Data Convenience
@@ -133,7 +135,8 @@ extension FlickrAPI {
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }
-        
-}//END OF EXTENSION: FlickrAPI
+    
+}
+//END OF EXTENSION: FlickrAPI
 
 

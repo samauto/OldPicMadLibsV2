@@ -26,12 +26,8 @@ class FlickrAPI: NSObject {
     // MARK: GET Photos
     func taskForGETMethod(method:[String:AnyObject], completionHandlerForGET: (success: Bool, result: AnyObject!, errorString: String?) -> Void) -> NSURLSessionDataTask{
         
-        //DEBUG print("METHOD", method)
-        
         //create the request
         let request = NSURLRequest(URL: flickrURLFromParameters(method))
-        
-        //DEBUG print("REQUEST", request)
         
         /* 4. Make the request */
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
@@ -62,10 +58,9 @@ class FlickrAPI: NSObject {
         /* 7. Start the request */
         task.resume()
         
-        //DEBUG print ("TASK",task)
-        
         return task
-    }//END OF FUNC: taskForGETMethod
+    }
+    //END OF FUNC: taskForGETMethod
     
     
     
@@ -83,7 +78,8 @@ class FlickrAPI: NSObject {
         
         completionHandlerForConvertData(success: true, result: parsedResult, errorString: nil)
         
-    }//END OF FUNC: convertDataWithCompletionHandler
+    }
+    //END OF FUNC: convertDataWithCompletionHandler
     
     
     // MARK: Helper for Creating a URL from Parameters
@@ -100,10 +96,11 @@ class FlickrAPI: NSObject {
             let queryItem = NSURLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
-        //DEBUG: print("components", components.URL!)
+        
         return components.URL!
         
-    }//END OF FUNC: flickrURLFromParameters
+    }
+    //END OF FUNC: flickrURLFromParameters
     
     
     // Shared Instance
@@ -111,10 +108,10 @@ class FlickrAPI: NSObject {
         struct Singleton {
             static var sharedInstance = FlickrAPI ()
         }
-        
         return Singleton.sharedInstance
         
-    }//END OF FUNC: sharedInstance
+    }
+    //END OF FUNC: sharedInstance
     
     
     //This function returns a task to download photo data given the photo's Flickr URL
@@ -136,7 +133,8 @@ class FlickrAPI: NSObject {
         
         return task
         
-    }//END OF FUNC: taskForPhoto
+    }
+    //END OF FUNC: taskForPhoto
     
     
     // MARK: - Shared Image Cache
@@ -144,6 +142,8 @@ class FlickrAPI: NSObject {
     struct Caches {
         static let imageCache = ImageCache()
         
-    }//End OF STRUCT: Caches
+    }
+    //END OF STRUCT: Caches
     
-}//END OF CLASS: FlickrAPI
+}
+//END OF CLASS: FlickrAPI
